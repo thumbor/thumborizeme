@@ -57,11 +57,14 @@
         resultTitle.text(url);
 
         var percentage = 100 - (Math.round((data["images-webp-size"] / data["images-size"]) * 100 * 100, 2) / 100);
+        var tweet = '';
 
         if (data["images-webp-size"] > data["images-size"]) {
+          tweet = "Check your website details too!";
           result.removeClass('panel-success').addClass('panel-danger');
           resultText.html("By upgrading your image server to thumbor you would go from <strong>" + data["images-size"] + "kb</strong> to <strong>" + data["images-webp-size"] + "kb</strong> for <strong>" + data["images-count"] + "</strong> images (using WebP images).");
         } else {
+          tweet = url + " could be saving " + (data["images-size"] - data["images-webp-size"]) + "kb by using thumbor!";
           result.removeClass('panel-danger').addClass('panel-success');
           resultText.html("By upgrading your image server to thumbor you would go from <strong>" + data["images-size"] + "kb</strong> to <strong>" + data["images-webp-size"] + "kb</strong> for <strong>" + data["images-count"] + "</strong> images, thus saving <strong>" + percentage + "%</strong> (using WebP images).");
         }
@@ -70,7 +73,8 @@
         result.fadeIn();
 
         social.html('');
-        social.append('<a href="https://twitter.com/share" class="twitter-share-button" data-url="' + url + '" data-text="See how much ' + url + ' could be saving with thumbor" data-hashtags="thumbor">Tweet</a>');
+
+        social.append('<a href="https://twitter.com/share" class="twitter-share-button" data-url="http://thumborize.me?url=' + url + '" data-text="' + tweet + '" data-hashtags="thumbor">Tweet</a>');
 
         social.append('<div ' +
             'class="fb-like" ' +
@@ -96,6 +100,8 @@
     var url = input.val();
 
     history.pushState({}, url + " - report", "?url=" + url);
+
+    updateUrl(url);
 
     ev.preventDefault();
   });

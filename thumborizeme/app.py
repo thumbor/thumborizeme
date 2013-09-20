@@ -62,8 +62,8 @@ class GetReportHandler(tornado.web.RequestHandler):
                 #loaded = yield http_client.fetch(thumborized)
                 #thumborized_size = len(loaded.body)
 
-                webp = "http://thumbor.thumborize.me/unsafe/filters:strip_icc():format(webp)/%s" % url
-                print "Loading webp %s..." % webp
+                webp = "http://thumbor.thumborize.me/unsafe/filters:strip_icc():format(webp):quality(80)/%s" % url
+                #print "Loading webp %s..." % webp
                 loaded = yield self.get_content(webp)
                 if loaded.code != 200:
                     continue
