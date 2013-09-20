@@ -12,3 +12,12 @@
   box-shadow: 0 2px 10px 0 rgba(0, 0, 0, 0.35);
   margin-top: 20px;
 }
+
+.study-progress {
+  width: 50%;
+  margin: 0 auto;
+}
+
+.study-progress .progress {
+  margin-top: 20px;
+}

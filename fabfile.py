@@ -22,23 +22,25 @@ def deploy():
             run('mkdir -p /tmp/thumbor/')
 
             #run('sudo aptitude update')
-            run('sudo aptitude install -y python python-dev python-setuptools supervisor libwebp4 webp libcurl3-openssl-dev libjpeg-dev libpng-dev nginx wget')
+            run('sudo aptitude install -y python python-dev python-setuptools supervisor libwebp4 webp libcurl3-openssl-dev libjpeg-dev libpng-dev nginx wget python-lxml')
             run('sudo easy_install pip')
             run('sudo pip install --upgrade setuptools')
-            run('sudo pip install -U pillow thumbor')
+            run('sudo pip install -U pillow thumbor cssselect')
 
             put('./supervisor.conf', '/etc/supervisord.conf', use_sudo=True)
             put('./thumbor.conf', '/etc/thumbor.conf', use_sudo=True)
             put('./nginx.conf', '/etc/nginx/sites-available/default', use_sudo=True)
 
+            run('mkdir -p /tmp/current')
             run('rm -rf /tmp/master*')
             run('cd /tmp && wget https://github.com/heynemann/thumborizeme/archive/master.zip')
             run('cd /tmp && unzip master.zip')
-            run('mv /tmp/thumborizeme-master current')
+            run('rm -rf /tmp/current && mv /tmp/thumborizeme-master /tmp/current')
 
             with settings(warn_only=True):
                 run('sudo /etc/init.d/nginx stop')
-                run("ps aux | egrep thumbor | egrep -v egrep | awk ' { print $2 } ' | xargs kill -9")
                 run("ps aux | egrep supervisor | egrep -v egrep | awk ' { print $2 } ' | xargs kill -9")
+                run("ps aux | egrep thumbor | egrep -v egrep | awk ' { print $2 } ' | xargs kill -9")
+                run("ps aux | egrep app.py  | egrep -v egrep | awk ' { print $2 } ' | xargs kill -9")
                 run('sudo /etc/init.d/supervisor start')
                 run('sudo /etc/init.d/nginx start')
