@@ -9,6 +9,7 @@ HOSTS = {
     ]
 }
 
+
 @task
 def deploy():
     for host in HOSTS['thumbor']:
@@ -24,11 +25,14 @@ def deploy():
             run('sudo aptitude install -y python python-dev python-setuptools supervisor libwebp4 webp libcurl3-openssl-dev libjpeg-dev libpng-dev nginx')
             run('sudo easy_install pip')
             run('sudo pip install --upgrade setuptools')
-            run('sudo pip install -U pillow thumbor')
+            run('sudo pip install -U pillow thumbor tornado')
 
             put('./supervisor.conf', '/etc/supervisord.conf', use_sudo=True)
             put('./thumbor.conf', '/etc/thumbor.conf', use_sudo=True)
             put('./nginx.conf', '/etc/nginx/sites-available/default', use_sudo=True)
+
+            put('./thumborizeme', '/tmp/thumborizeme')
+            run('mv /tmp/thumborizeme /tmp/current')
 
             with settings(warn_only=True):
                 run('sudo /etc/init.d/nginx stop')

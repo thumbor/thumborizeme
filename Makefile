@@ -1,2 +1,2 @@
 run:
-	@cd thumborizeme && python -mSimpleHTTPServer
+	@cd thumborizeme && python app.py 9000
