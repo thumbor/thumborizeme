@@ -1,0 +1,103 @@
+<!DOCTYPE HTML>
+
+<html>
+<head>
+  <meta http-equiv="content-type" content="text/html; charset=utf-8">
+  <title>thumborize.me - Check how you would benefit from using thumbor</title>
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="css/bootstrap.min.css" type="text/css" media="screen" />
+  <link rel="stylesheet" href="css/bootstrap-theme.min.css" type="text/css" media="screen" />
+  <link rel="stylesheet" href="css/main.css" type="text/css" media="screen" />
+</head>
+
+<body>
+  <div class="container">
+    <div class="header">
+      <a href="/"><h3 class="text-muted">thumborize.me</h3></a>
+    </div>
+    <div class="jumbotron">
+      <h1>Have better images today!</h1>
+      <p class="lead"><a href="http://github.com/globocom/thumbor">thumbor</a> can help your website look sharp without clogging your users' tubes. Fill the url for your website below to learn how much thumbor can help you with very little effort.</p>
+      <p>
+        <input type="url" class="form-control input-lg" id="website" placeholder="Enter your website url">
+        <a class="btn btn-lg btn-success" href="#">thumborize me</a>
+      </p>
+    </div>
+
+    <hr class="featurette-divider">
+
+    <div class="row featurette">
+      <div class="col-md-7">
+        <h2 class="featurette-heading">Thumbor supports <img height="36" src="img/webplogo.png">. <span class="text-muted">Automagically.</span></h2>
+        <p class="lead">
+          <a href="https://developers.google.com/speed/webp/">WebP</a> is a new format for lossy and lossless images that compresses a lot better than jpegs or pngs.
+        </p>
+        <p class="lead">
+          Thumbor allows users to specify that browsers that support WebP automatically get it. This can have a dramatic increase in the performance of your website.
+        </p>
+        <p class="lead">
+          Besides WebP, Thumbor also uses some tactics to reduce the file size even further. Use the input above to find how much bandwidth thumbor can save for you.
+        </p>
+      </div>
+      <div class="col-md-5">
+        <img class="featurette-image img-responsive first-image" src="http://192.241.167.88/unsafe/500x350/filters:strip_icc()/http://www.paqoo.com/gudang/beautiful-beach-wallpapers.jpg"  alt="Automatically selecting webp when possible">
+      </div>
+    </div>
+
+    <hr class="featurette-divider">
+
+    <div class="row featurette">
+      <div class="col-md-5">
+        <img class="featurette-image img-responsive" src="http://192.241.167.88/unsafe/500x330/filters:strip_icc()/http://www.hdwpapers.com/walls/kate_middleton_sweet_face_wallpaper-normal.jpg"  alt="Face detection">
+      </div>
+      <div class="col-md-7">
+        <h2 class="featurette-heading">Light-headed? <span class="text-muted">No more headless bodies.</span></h2>
+        <p class="lead">
+          Thumbor uses state-of-the-art face detection to ensure you get the best possible crop. Whenever a face is found it will crop your image around it making sure the most important parts of the photo are preserved.
+        </p>
+        <p class="lead">
+          Even though this process is expensive, Thumbor will serve the image with a "best possible" crop while the face detection is being performed. The next time someone asks for the image, the correct face-detected image is served instead.
+        </p>
+      </div>
+    </div>
+
+    <hr class="featurette-divider">
+
+    <div class="row featurette">
+      <div class="col-md-7">
+        <h2 class="featurette-heading">Images here and there. <span class="text-muted">Everywhere.</span></h2>
+        <p class="lead">
+          Thumbor allows users to store and load images from anywhere needed. It's <strong>really</strong> simple to implement a new loader or storage.
+        </p>
+        <p class="lead">
+          It comes packaged with file, http, redis and mongo implementations for loaders and storages. Just pick what makes sense for you or implement your own.
+        </p>
+        <p class="lead">
+          Thumbor has <a href="https://github.com/globocom/thumbor/wiki"> great documentation</a> dedicated to help users get up to speed with it.
+        </p>
+      </div>
+      <div class="col-md-5">
+        <img class="featurette-image img-responsive first-image" src="http://192.241.167.88/unsafe/500x300/filters:strip_icc()/http://www.wallsave.com/wallpapers/2560x1600/cloud/66266/cloud-zeom-computing-g-free-66266.jpg" alt="Store and load images from everywhere">
+      </div>
+    </div>
+
+    <hr class="featurette-divider">
+
+    <div class="well well-lg">
+      <p>
+      All the images in this website were generated using thumbor.
+      </p>
+      <p>The originals are huge (379kb, 609kb and 65kb). The corresponding ones in thumbor amount to 78.3kb instead.</p>
+    </div>
+
+    <div class="footer">
+      <p>&copy; thumborize.me - 2013</p>
+    </div>
+  </div> <!-- /container -->
+
+  <script src="//code.jquery.com/jquery.js"></script>
+  <script type="text/javascript" charset="utf-8" src="js/bootstrap.min.js"></script>
+</body>
+
+</html>
