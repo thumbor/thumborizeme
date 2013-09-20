@@ -2,6 +2,7 @@ import sys
 import os.path
 from json import dumps, loads
 from datetime import datetime
+import locale
 
 import tornado.ioloop
 import tornado.web
@@ -13,6 +14,8 @@ from toredis import Client
 
 
 class MainHandler(tornado.web.RequestHandler):
+    @tornado.gen.coroutine
+    @tornado.web.asynchronous
     def get(self):
         url = self.get_argument('url', None)
 
@@ -21,7 +24,12 @@ class MainHandler(tornado.web.RequestHandler):
         else:
             title = "Test results for %s" % url
 
-        self.render('index.html', title=title)
+        total_images = yield tornado.gen.Task(self.application.redis.get, 'total_images')
+        total_images = int(total_images or 0)
+        locale.setlocale(locale.LC_ALL, 'en_US')
+        total_images = locale.format("%d", total_images, grouping=True)
+
+        self.render('index.html', title=title, total_images=total_images)
 
 
 class GetReportHandler(tornado.web.RequestHandler):
@@ -31,7 +39,6 @@ class GetReportHandler(tornado.web.RequestHandler):
         site_url = self.get_argument('url')
 
         cached_data = yield tornado.gen.Task(self.application.redis.get, site_url.rstrip('/'))
-
         if cached_data is not None:
             print "GETTING FROM CACHE"
             self.write(loads(cached_data))
@@ -79,9 +86,12 @@ class GetReportHandler(tornado.web.RequestHandler):
                     #'thumborized': thumborized_size / 1024.0,
                     'webp': webp_size / 1024.0
                 }
+
             except Exception, err:
                 print str(err)
                 continue
+
+        yield tornado.gen.Task(self.application.redis.incrby, 'total_images', len(images.keys()))
 
         json_data = self.to_json({
             'url': site_url,
