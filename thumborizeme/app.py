@@ -2,7 +2,6 @@ import sys
 import os.path
 from json import dumps, loads
 from datetime import datetime
-import locale
 
 import tornado.ioloop
 import tornado.web
@@ -26,8 +25,6 @@ class MainHandler(tornado.web.RequestHandler):
 
         total_images = yield tornado.gen.Task(self.application.redis.get, 'total_images')
         total_images = int(total_images or 0)
-        locale.setlocale(locale.LC_ALL, 'en_US')
-        total_images = locale.format("%d", total_images, grouping=True)
 
         self.render('index.html', title=title, total_images=total_images)
         self.finish()
