@@ -46,6 +46,10 @@ class GetReportHandler(tornado.web.RequestHandler):
 
         for img in imgs:
             url = img.get('src').lstrip('//')
+
+            if url.starts_with('/'):
+                url = "%s/%s" % (site_url.rstrip('/'), url)
+
             print "Loading %s..." % url
 
             try:
