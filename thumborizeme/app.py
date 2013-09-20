@@ -42,6 +42,9 @@ class GetReportHandler(tornado.web.RequestHandler):
             print "Loading %s..." % url
 
             try:
+                if url in images:
+                    continue
+
                 loaded = yield self.get_content(url)
                 if loaded.code != 200:
                     continue
