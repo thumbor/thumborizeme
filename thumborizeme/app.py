@@ -20,5 +20,10 @@ application = tornado.web.Application([
 ], **settings)
 
 if __name__ == "__main__":
-    application.listen(int(sys.argv[1]))
+    if len(sys.argv) > 2:
+        port = int(sys.argv[2])
+    else:
+        port = int(sys.argv[1])
+
+    application.listen(port)
     tornado.ioloop.IOLoop.instance().start()
