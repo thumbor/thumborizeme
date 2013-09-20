@@ -1,6 +1,6 @@
 import sys
 import os.path
-from json import dumps
+from json import dumps, loads
 from datetime import datetime
 
 import tornado.ioloop
@@ -9,6 +9,7 @@ import tornado.gen
 from tornado.httpclient import AsyncHTTPClient, HTTPRequest
 from tornado.concurrent import return_future
 import lxml.html
+from toredis import Client
 
 
 class MainHandler(tornado.web.RequestHandler):
@@ -29,13 +30,13 @@ class GetReportHandler(tornado.web.RequestHandler):
     def get(self):
         site_url = self.get_argument('url')
 
-        if site_url in self.application.STUDIES:
-            study = self.application.STUDIES[site_url]
-            if not self.is_expired(study['date']):
-                print "GETTING FROM CACHE"
-                self.write(self.to_json(study))
-                self.finish()
-                return
+        cached_data = yield tornado.gen.Task(self.application.redis.get, site_url.rstrip('/'))
+
+        if cached_data is not None:
+            print "GETTING FROM CACHE"
+            self.write(loads(cached_data))
+            self.finish()
+            return
 
         response = yield self.get_content(site_url)
 
@@ -82,21 +83,21 @@ class GetReportHandler(tornado.web.RequestHandler):
                 print str(err)
                 continue
 
-        self.application.STUDIES[site_url] = {
+        json_data = self.to_json({
             'url': site_url,
             'images-count': len(images.keys()),
             'images-size': round(sum([image['original'] for image in images.values()]), 2),
-            'images-webp-size': round(sum([image['webp'] for image in images.values()]), 2),
-            'date': datetime.now()
-        }
+            'images-webp-size': round(sum([image['webp'] for image in images.values()]), 2)
+        })
 
-        self.write(self.to_json(self.application.STUDIES[site_url]))
+        yield tornado.gen.Task(self.application.redis.setex, site_url.rstrip('/'), 6 * 60 * 60, json_data)
+
+        self.write(json_data)
 
         self.finish()
 
     def to_json(self, value):
-        dthandler = lambda obj: obj.isoformat() if isinstance(obj, datetime) else None
-        return dumps(value, default=dthandler)
+        return dumps(value)
 
     @return_future
     def get_content(self, url, callback):
@@ -113,18 +114,37 @@ class GetReportHandler(tornado.web.RequestHandler):
         return (datetime.now() - dt).total_seconds() > (6 * 60 * 60)
 
 
-root_path = os.path.abspath(os.path.join(os.path.dirname(__file__)))
-settings = dict(
-    static_path=root_path,
-    template_path=root_path
-)
+def has_connected(application, io_loop):
+    def handle(*args, **kw):
+        pass
 
-application = tornado.web.Application([
-    (r"/", MainHandler),
-    (r"/report", GetReportHandler),
-], **settings)
+    return handle
 
-application.STUDIES = {}
+
+def main(port):
+    io_loop = tornado.ioloop.IOLoop.instance()
+
+    root_path = os.path.abspath(os.path.join(os.path.dirname(__file__)))
+    settings = dict(
+        static_path=root_path,
+        template_path=root_path
+    )
+
+    application = tornado.web.Application([
+        (r"/", MainHandler),
+        (r"/report", GetReportHandler),
+    ], **settings)
+
+    redis_host = '127.0.0.1'
+    redis_port = 6379
+
+    application.redis = Client(io_loop=io_loop)
+    application.redis.authenticated = False
+    application.redis.connect(redis_host, redis_port, callback=has_connected(application, io_loop))
+
+    application.listen(port)
+    io_loop.start()
+
 
 if __name__ == "__main__":
     if len(sys.argv) > 2:
@@ -132,5 +152,4 @@ if __name__ == "__main__":
     else:
         port = int(sys.argv[1])
 
-    application.listen(port)
-    tornado.ioloop.IOLoop.instance().start()
+    main(port)

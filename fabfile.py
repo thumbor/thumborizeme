@@ -22,10 +22,10 @@ def deploy():
             run('mkdir -p /tmp/thumbor/')
 
             #run('sudo aptitude update')
-            run('sudo aptitude install -y python python-dev python-setuptools supervisor libwebp4 webp libcurl3-openssl-dev libjpeg-dev libpng-dev nginx wget python-lxml')
+            run('sudo aptitude install -y python python-dev python-setuptools supervisor libwebp4 webp libcurl3-openssl-dev libjpeg-dev libpng-dev nginx wget python-lxml redis-server libhiredis-dev')
             run('sudo easy_install pip')
             run('sudo pip install --upgrade setuptools')
-            run('sudo pip install -U pillow thumbor cssselect')
+            run('sudo pip install -U pillow thumbor cssselect toredis')
 
             put('./supervisor.conf', '/etc/supervisord.conf', use_sudo=True)
             put('./thumbor.conf', '/etc/thumbor.conf', use_sudo=True)
