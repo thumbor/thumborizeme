@@ -30,6 +30,7 @@ class MainHandler(tornado.web.RequestHandler):
         total_images = locale.format("%d", total_images, grouping=True)
 
         self.render('index.html', title=title, total_images=total_images)
+        self.finish()
 
 
 class GetReportHandler(tornado.web.RequestHandler):
