@@ -21,3 +21,10 @@
 .study-progress .progress {
   margin-top: 20px;
 }
+
+.panel .social {
+  width: 500px;
+  float: right;
+  text-align: right;
+  margin-top: -18px;
+}

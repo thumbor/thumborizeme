@@ -1,4 +1,11 @@
 (function() {
+  function getParameterByName(name) {
+    name = name.replace(/[\[]/, "\\\[").replace(/[\]]/, "\\\]");
+    var regex = new RegExp("[\\?&]" + name + "=([^&#]*)"),
+        results = regex.exec(location.search);
+    return results == null ? "" : decodeURIComponent(results[1].replace(/\+/g, " "));
+  }
+
   function checkURL(s) {
     var regexp = /(ftp|http|https):\/\/(\w+:{0,1}\w*@)?(\S+)(:[0-9]+)?(\/|\/([\w#!:.?+=&%@!\-\/]))?/
     return regexp.test(s);
@@ -14,6 +21,8 @@
 
   var progress = $('.study-progress');
 
+  var social = $('.social');
+
   result.hide();
   progress.hide()
 
@@ -27,14 +36,10 @@
     input.removeAttr('readonly');
   }
 
-  submit.bind('click', function(ev) {
-    if (submit.attr('disabled') == 'disabled') {
-      return;
-    }
-
+  function updateUrl(url) {
+    input.val(url);
     disable();
 
-    var url = input.val();
     if (!checkURL(url)) {
       website.addClass('has-error');
       enable();
@@ -63,10 +68,41 @@
 
         progress.hide();
         result.fadeIn();
+
+        social.html('');
+        social.append('<a href="https://twitter.com/share" class="twitter-share-button" data-url="' + url + '" data-text="See how much ' + url + ' could be saving with thumbor" data-hashtags="thumbor">Tweet</a>');
+
+        social.append('<div ' +
+            'class="fb-like" ' +
+            'data-href="http://thumborize.me/?url=' + encodeURIComponent(url) + ' ' +
+            'data-width="200" ' +
+            'data-layout="button_count" ' +
+            'data-show-faces="false" ' +
+            'data-send="false"></div>');
+
+        FB.XFBML.parse()
+        twttr.widgets.load()
+
         enable();
       }
     });
+  }
+
+  submit.bind('click', function(ev) {
+    if (submit.attr('disabled') == 'disabled') {
+      return;
+    }
+
+    var url = input.val();
+
+    history.pushState({}, url + " - report", "?url=" + url);
 
     ev.preventDefault();
   });
+
+  var url = getParameterByName('url');
+
+  if (url != null) {
+    updateUrl(url);
+  }
 })();

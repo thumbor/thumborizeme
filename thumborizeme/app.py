@@ -13,7 +13,14 @@ import lxml.html
 
 class MainHandler(tornado.web.RequestHandler):
     def get(self):
-        self.render('index.html')
+        url = self.get_argument('url', None)
+
+        if url is None:
+            title = "Check how you would benefit from using thumbor"
+        else:
+            title = "Test results for %s" % url
+
+        self.render('index.html', title=title)
 
 
 class GetReportHandler(tornado.web.RequestHandler):
@@ -38,7 +45,7 @@ class GetReportHandler(tornado.web.RequestHandler):
         images = {}
 
         for img in imgs:
-            url = img.get('src')
+            url = img.get('src').lstrip('//')
             print "Loading %s..." % url
 
             try:
