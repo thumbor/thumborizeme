@@ -25,7 +25,8 @@ def deploy():
             run('sudo aptitude install -y python python-dev python-setuptools supervisor libwebp4 webp libcurl3-openssl-dev libjpeg-dev libpng-dev nginx wget python-lxml redis-server libhiredis-dev')
             run('sudo easy_install pip')
             run('sudo pip install --upgrade setuptools')
-            run('sudo pip install -U pillow thumbor cssselect toredis')
+            run('sudo pip install "Pillow>=2.1.0,<2.2.0"')
+            run('sudo pip install -U thumbor cssselect toredis')
 
             put('./supervisor.conf', '/etc/supervisord.conf', use_sudo=True)
             put('./thumbor.conf', '/etc/thumbor.conf', use_sudo=True)
