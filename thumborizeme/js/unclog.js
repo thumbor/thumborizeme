@@ -92,6 +92,7 @@
     });
   }
 
+  console.log(submit);
   submit.bind('click', function(ev) {
     if (submit.attr('disabled') == 'disabled') {
       return;
