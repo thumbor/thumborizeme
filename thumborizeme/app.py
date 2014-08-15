@@ -67,13 +67,7 @@ class GetReportHandler(tornado.web.RequestHandler):
                     continue
                 original_size = len(loaded.body)
 
-                #thumborized = "http://thumbor.thumborize.me/unsafe/filters:strip_icc()/%s" % url
-                #print "Loading thumborized %s..." % thumborized
-                #loaded = yield http_client.fetch(thumborized)
-                #thumborized_size = len(loaded.body)
-
                 webp = "http://thumbor.thumborize.me/unsafe/filters:strip_icc():format(webp):quality(80)/%s" % url
-                #print "Loading webp %s..." % webp
                 loaded = yield self.get_content(webp)
                 if loaded.code != 200:
                     continue
@@ -81,7 +75,7 @@ class GetReportHandler(tornado.web.RequestHandler):
 
                 images[url] = {
                     'original': original_size / 1024.0,
-                    #'thumborized': thumborized_size / 1024.0,
+                    # 'thumborized': thumborized_size / 1024.0,
                     'webp': webp_size / 1024.0
                 }
 
@@ -130,6 +124,7 @@ def has_connected(application, io_loop):
 
 
 def main(port):
+    AsyncHTTPClient.configure("tornado.curl_httpclient.CurlAsyncHTTPClient")
     io_loop = tornado.ioloop.IOLoop.instance()
 
     root_path = os.path.abspath(os.path.join(os.path.dirname(__file__)))
