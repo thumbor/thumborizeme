@@ -2,9 +2,15 @@ import requests
 from fabric.api import * # NOQA
 
 HOSTS = {
+    #'thumbor': [
+        #{
+            #'host': '192.241.167.88',
+            #'username': 'root'
+        #}
+    #],
     'thumbor': [
         {
-            'host': '192.241.167.88',
+            'host': '104.236.46.59',
             'username': 'root'
         }
     ]
@@ -22,15 +28,15 @@ def deploy():
             run('mkdir -p /var/run/')
             run('mkdir -p /tmp/thumbor/')
 
-            # run('sudo aptitude update')
+            run('sudo aptitude update')
             r = requests.get('https://raw.githubusercontent.com/thumbor/thumbor/master/requirements')
             deps = r.content.replace('\n', ' ')
-            run('sudo aptitude install -y python python-dev python-setuptools supervisor nginx wget python-lxml redis-server libhiredis-dev %s' % deps)
+            run('sudo aptitude install -y unzip python python-dev python-setuptools supervisor nginx wget python-lxml libssl-dev redis-server libhiredis-dev %s' % deps)
             run('sudo easy_install pip')
             run('sudo pip install --upgrade setuptools')
             run('sudo pip install -U thumbor cssselect toredis')
 
-            put('./supervisor.conf', '/etc/supervisord.conf', use_sudo=True)
+            put('./supervisor.conf', '/etc/supervisor/supervisord.conf', use_sudo=True)
             put('./thumbor.conf', '/etc/thumbor.conf', use_sudo=True)
             put('./nginx.conf', '/etc/nginx/sites-available/default', use_sudo=True)
 
@@ -45,5 +51,7 @@ def deploy():
                 run("ps aux | egrep supervisor | egrep -v egrep | awk ' { print $2 } ' | xargs kill -9")
                 run("ps aux | egrep thumbor | egrep -v egrep | awk ' { print $2 } ' | xargs kill -9")
                 run("ps aux | egrep app.py  | egrep -v egrep | awk ' { print $2 } ' | xargs kill -9")
+                run('sudo /etc/init.d/supervisor stop')
                 run('sudo /etc/init.d/supervisor start')
+                run('sudo /etc/init.d/nginx stop')
                 run('sudo /etc/init.d/nginx start')
