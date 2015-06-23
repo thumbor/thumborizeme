@@ -31,7 +31,7 @@ def deploy():
             run('sudo aptitude update')
             r = requests.get('https://raw.githubusercontent.com/thumbor/thumbor/master/requirements')
             deps = r.content.replace('\n', ' ')
-            run('sudo aptitude install -y unzip python python-dev python-setuptools supervisor nginx wget python-lxml libssl-dev redis-server libhiredis-dev %s' % deps)
+            run('sudo aptitude install -y unzip python python-dev python-setuptools supervisor nginx wget python-lxml libssl-dev redis-server libhiredis-dev ffmpeg %s' % deps)
             run('sudo easy_install pip')
             run('sudo pip install --upgrade setuptools')
             run('sudo pip install -U thumbor cssselect toredis')
