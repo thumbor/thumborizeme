@@ -1,4 +1,5 @@
-from fabric.api import *
+import requests
+from fabric.api import * # NOQA
 
 HOSTS = {
     'thumbor': [
@@ -21,8 +22,10 @@ def deploy():
             run('mkdir -p /var/run/')
             run('mkdir -p /tmp/thumbor/')
 
-            #run('sudo aptitude update')
-            run('sudo aptitude install -y python python-dev python-setuptools supervisor libwebp4 webp libwebp-dev libcurl3-openssl-dev libjpeg-dev libpng-dev nginx wget python-lxml redis-server libhiredis-dev')
+            # run('sudo aptitude update')
+            r = requests.get('https://raw.githubusercontent.com/thumbor/thumbor/master/requirements')
+            deps = r.content.replace('\n', ' ')
+            run('sudo aptitude install -y python python-dev python-setuptools supervisor nginx wget python-lxml redis-server libhiredis-dev %s' % deps)
             run('sudo easy_install pip')
             run('sudo pip install --upgrade setuptools')
             run('sudo pip install -U thumbor cssselect toredis')
