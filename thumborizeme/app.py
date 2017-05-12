@@ -31,7 +31,9 @@ class MainHandler(tornado.web.RequestHandler):
         total_images = yield tornado.gen.Task(self.application.redis.get, 'total_images')
         total_images = int(total_images or 0)
 
-        self.render('index.html', title=title, total_images=total_images)
+        year = datetime.now().year
+
+        self.render('index.html', title=title, total_images=total_images, year=year)
         self.finish()
 
 
