@@ -3,13 +3,18 @@ import os.path
 from json import dumps, loads
 from datetime import datetime
 
+import lxml.html
+
 import tornado.ioloop
 import tornado.web
 import tornado.gen
+
 from tornado.httpclient import AsyncHTTPClient, HTTPRequest
 from tornado.concurrent import return_future
-import lxml.html
+
 from toredis import Client
+
+import settings
 
 
 class MainHandler(tornado.web.RequestHandler):
@@ -128,7 +133,7 @@ def main(port):
     io_loop = tornado.ioloop.IOLoop.instance()
 
     root_path = os.path.abspath(os.path.join(os.path.dirname(__file__)))
-    settings = dict(
+    config = dict(
         static_path=root_path,
         template_path=root_path
     )
@@ -136,10 +141,10 @@ def main(port):
     application = tornado.web.Application([
         (r"/", MainHandler),
         (r"/report", GetReportHandler),
-    ], **settings)
+    ], **config)
 
-    redis_host = '127.0.0.1'
-    redis_port = 6379
+    redis_host = settings.REDIS_HOST
+    redis_port = settings.REDIS_PORT
 
     application.redis = Client(io_loop=io_loop)
     application.redis.authenticated = False
