@@ -53,6 +53,7 @@ class GetReportHandler(tornado.web.RequestHandler):
         response = yield self.get_content(site_url)
 
         html = lxml.html.fromstring(response.body)
+
         imgs = html.cssselect('img[src]')
 
         images = {}
@@ -62,6 +63,8 @@ class GetReportHandler(tornado.web.RequestHandler):
 
             if not url.startswith('http'):
                 url = "%s/%s" % (site_url.rstrip('/'), url)
+                if 'data:image' in url:
+                    continue
 
             print "Loading %s..." % url
 
@@ -70,15 +73,17 @@ class GetReportHandler(tornado.web.RequestHandler):
                     continue
 
                 loaded = yield self.get_content(url)
+
                 if loaded.code != 200:
                     continue
                 original_size = len(loaded.body)
 
-                webp = "http://thumbor.thumborize.me/unsafe/filters:strip_icc():format(webp):quality(80)/%s" % url
-                loaded = yield self.get_content(webp)
-                if loaded.code != 200:
+                webp = "%s/unsafe/filters:strip_icc():format(webp):quality(80)/%s" % (settings.THUMBOR_HOST, url)
+                webp_loaded = yield self.get_content(webp)
+
+                if webp_loaded.code != 200:
                     continue
-                webp_size = len(loaded.body)
+                webp_size = len(webp_loaded.body)
 
                 images[url] = {
                     'original': original_size / 1024.0,
