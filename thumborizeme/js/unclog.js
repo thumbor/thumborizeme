@@ -55,39 +55,52 @@
       dataType: 'json',
       success: function(data) {
         resultTitle.text(url);
+        var imagesCount = data['images-count'];
+        var sizeWebP = data["images-webp-size"] ? data["images-webp-size"] : 0;
+        var imagesSize = data["images-size"] ? data["images-size"] : 0;
 
-        var percentage = 100 - (Math.round((data["images-webp-size"] / data["images-size"]) * 100 * 100, 2) / 100);
-        var tweet = '';
+        if (imagesCount){
+            if (sizeWebP && imagesSize){
+                var percentage = 100 - (Math.round((sizeWebP / imagesSize) * 100 * 100, 2) / 100);
+                var tweet = '';
 
-        if (data["images-webp-size"] > data["images-size"]) {
-          tweet = "Check your website details too!";
-          result.removeClass('panel-success').addClass('panel-danger');
-          resultText.html("By upgrading your image server to thumbor you would go from <strong>" + data["images-size"] + "kb</strong> to <strong>" + data["images-webp-size"] + "kb</strong> for <strong>" + data["images-count"] + "</strong> images (using WebP images).");
-        } else {
-          tweet = url + " could be saving " + (data["images-size"] - data["images-webp-size"]) + "kb by using thumbor!";
-          result.removeClass('panel-danger').addClass('panel-success');
-          resultText.html("By upgrading your image server to thumbor you would go from <strong>" + data["images-size"] + "kb</strong> to <strong>" + data["images-webp-size"] + "kb</strong> for <strong>" + data["images-count"] + "</strong> images, thus saving <strong>" + percentage + "%</strong> (using WebP images).");
+                if (data["images-webp-size"] > data["images-size"]) {
+                  tweet = "Check your website details too!";
+                  result.removeClass('panel-success').addClass('panel-danger');
+                  resultText.html("By upgrading your image server to thumbor you would go from <strong>" + data["images-size"] + "kb</strong> to <strong>" + data["images-webp-size"] + "kb</strong> for <strong>" + data["images-count"] + "</strong> images (using WebP images).");
+                } else {
+                  tweet = url + " could be saving " + (data["images-size"] - data["images-webp-size"]) + "kb by using thumbor!";
+                  result.removeClass('panel-danger').addClass('panel-success');
+                  resultText.html("By upgrading your image server to thumbor you would go from <strong>" + data["images-size"] + "kb</strong> to <strong>" + data["images-webp-size"] + "kb</strong> for <strong>" + data["images-count"] + "</strong> images, thus saving <strong>" + percentage + "%</strong> (using WebP images).");
+                }
+
+                progress.hide();
+                result.fadeIn();
+
+                social.html('');
+
+                social.append('<a href="https://twitter.com/share" class="twitter-share-button" data-url="http://thumborize.me?url=' + url + '" data-text="' + tweet + '" data-hashtags="thumbor">Tweet</a>');
+
+                social.append('<div ' +
+                    'class="fb-like" ' +
+                    'data-href="http://thumborize.me/?url=' + encodeURIComponent(url) + ' ' +
+                    'data-width="200" ' +
+                    'data-layout="button_count" ' +
+                    'data-show-faces="false" ' +
+                    'data-send="false"></div>');
+
+                FB.XFBML.parse()
+                twttr.widgets.load()
+
+                enable();
+            }
+        }else {
+            progress.hide();
+            result.fadeIn();
+            social.html('');
+            result.removeClass('panel-success').addClass('panel-danger');
+            resultText.html("No images found.");
         }
-
-        progress.hide();
-        result.fadeIn();
-
-        social.html('');
-
-        social.append('<a href="https://twitter.com/share" class="twitter-share-button" data-url="http://thumborize.me?url=' + url + '" data-text="' + tweet + '" data-hashtags="thumbor">Tweet</a>');
-
-        social.append('<div ' +
-            'class="fb-like" ' +
-            'data-href="http://thumborize.me/?url=' + encodeURIComponent(url) + ' ' +
-            'data-width="200" ' +
-            'data-layout="button_count" ' +
-            'data-show-faces="false" ' +
-            'data-send="false"></div>');
-
-        FB.XFBML.parse()
-        twttr.widgets.load()
-
-        enable();
       }
     });
   }

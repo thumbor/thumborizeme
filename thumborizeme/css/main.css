@@ -28,3 +28,11 @@
   text-align: right;
   margin-top: -18px;
 }
+
+.social .twitter-share-button {
+    margin-right: 5px;
+}
+
+.social .fb-like {
+    bottom: 5px;
+}
