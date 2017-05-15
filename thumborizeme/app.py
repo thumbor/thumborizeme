@@ -33,7 +33,7 @@ class MainHandler(tornado.web.RequestHandler):
 
         year = datetime.now().year
 
-        self.render('index.html', title=title, total_images=total_images, year=year)
+        self.render('index.html', title=title, total_images=total_images, year=year, host=settings.HOST, thumbor_host=settings.THUMBOR_HOST)
         self.finish()
 
 
