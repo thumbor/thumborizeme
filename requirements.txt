@@ -1,7 +1,7 @@
-fabric
 tornado>=2.1.1,<3.1.0
 lxml
 cssselect
 toredis
 requests
 pycurl==7.43.0
+honcho==1.0.1
