@@ -4,4 +4,4 @@ cssselect
 toredis
 requests
 pycurl==7.43.0
-honcho==1.0.1
+gunicorn==19.7.1
