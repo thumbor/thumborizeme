@@ -164,7 +164,7 @@ def main(port):
     ], **config)
 
     redis_host = settings.REDIS_HOST
-    redis_port = settings.REDIS_PORT
+    redis_port = int(settings.REDIS_PORT)
 
     application.redis = Client(io_loop=io_loop)
     application.redis.authenticated = True
