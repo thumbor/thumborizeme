@@ -171,7 +171,7 @@ def main(port):
     application.redis.connect(redis_host, redis_port, callback=has_connected(application, io_loop))
     application.redis.auth(settings.REDIS_PASSWORD)
 
-    application.listen(port)
+    application.listen(port, address='0.0.0.0')
     io_loop.start()
 
 
