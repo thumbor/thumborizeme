@@ -149,7 +149,7 @@ def has_connected(application, io_loop):
 
 def main(arguments, *args, **kwargs):
     tornado_port = arguments
-    if isinstance(port, dict):
+    if isinstance(arguments, dict):
         tornado_port = arguments.get('SERVER_PORT')
 
     AsyncHTTPClient.configure("tornado.curl_httpclient.CurlAsyncHTTPClient")
