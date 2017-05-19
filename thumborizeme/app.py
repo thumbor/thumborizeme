@@ -147,7 +147,11 @@ def has_connected(application, io_loop):
     return handle
 
 
-def main(port):
+def main(arguments):
+    tornado_port = arguments
+    if isinstance(port, dict):
+        tornado_port = arguments.get('SERVER_PORT')
+
     AsyncHTTPClient.configure("tornado.curl_httpclient.CurlAsyncHTTPClient")
     io_loop = tornado.ioloop.IOLoop.instance()
 
@@ -171,9 +175,8 @@ def main(port):
     application.redis.connect(redis_host, redis_port, callback=has_connected(application, io_loop))
     application.redis.auth(settings.REDIS_PASSWORD)
 
-    application.listen(port, address='0.0.0.0')
+    application.listen(tornado_port, address='0.0.0.0')
     io_loop.start()
-
 
 if __name__ == "__main__":
     if len(sys.argv) > 2:
