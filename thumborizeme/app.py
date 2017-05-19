@@ -21,7 +21,12 @@ class HealthCheckHandler(tornado.web.RequestHandler):
     @tornado.gen.coroutine
     @tornado.web.asynchronous
     def get(self):
-        self.write("WORKING !")
+        try:
+            yield tornado.gen.Task(self.application.redis.ping)
+            self.write("WORKING !")
+        except Exception:
+            self.set_status(500)
+            self.write("DOWN !")
         self.finish()
 
 
