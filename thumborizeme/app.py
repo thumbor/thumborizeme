@@ -167,8 +167,9 @@ def main(port):
     redis_port = settings.REDIS_PORT
 
     application.redis = Client(io_loop=io_loop)
-    application.redis.authenticated = False
+    application.redis.authenticated = True
     application.redis.connect(redis_host, redis_port, callback=has_connected(application, io_loop))
+    application.redis.auth(settings.REDIS_PASSWORD)
 
     application.listen(port)
     io_loop.start()
