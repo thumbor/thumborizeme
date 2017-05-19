@@ -147,7 +147,7 @@ def has_connected(application, io_loop):
     return handle
 
 
-def main(arguments):
+def main(arguments, *args, **kwargs):
     tornado_port = arguments
     if isinstance(port, dict):
         tornado_port = arguments.get('SERVER_PORT')
