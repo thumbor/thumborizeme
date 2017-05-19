@@ -17,6 +17,14 @@ from toredis import Client
 import settings
 
 
+class HealthCheckHandler(tornado.web.RequestHandler):
+    @tornado.gen.coroutine
+    @tornado.web.asynchronous
+    def get(self):
+        self.write("WORKING !")
+        self.finish()
+
+
 class MainHandler(tornado.web.RequestHandler):
     @tornado.gen.coroutine
     @tornado.web.asynchronous
@@ -34,7 +42,6 @@ class MainHandler(tornado.web.RequestHandler):
         year = datetime.now().year
 
         self.render('index.html', title=title, total_images=total_images, year=year, host=settings.HOST, thumbor_host=settings.THUMBOR_HOST)
-        self.finish()
 
 
 class GetReportHandler(tornado.web.RequestHandler):
@@ -148,6 +155,7 @@ def main(port):
     application = tornado.web.Application([
         (r"/", MainHandler),
         (r"/report", GetReportHandler),
+        (r"/healthcheck", HealthCheckHandler),
     ], **config)
 
     redis_host = settings.REDIS_HOST
