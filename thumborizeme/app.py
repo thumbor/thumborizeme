@@ -131,10 +131,12 @@ class GetReportHandler(tornado.web.RequestHandler):
 
     @return_future
     def get_content(self, url, callback):
+        proxy_host = settings.PROXY_HOST
         req = HTTPRequest(
             url=url,
             connect_timeout=1,
             request_timeout=3,
+            proxy_host=proxy_host
         )
 
         http_client = AsyncHTTPClient()
