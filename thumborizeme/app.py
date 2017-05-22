@@ -16,6 +16,10 @@ from toredis import Client
 
 import settings
 
+root_path = os.path.abspath(os.path.join(os.path.dirname(__file__)))
+AsyncHTTPClient.configure("tornado.curl_httpclient.CurlAsyncHTTPClient")
+io_loop = tornado.ioloop.IOLoop.instance()
+
 
 class HealthCheckHandler(tornado.web.RequestHandler):
     @tornado.gen.coroutine
@@ -146,42 +150,26 @@ def has_connected(application, io_loop):
 
     return handle
 
+application = tornado.web.Application([
+    (r"/", MainHandler),
+    (r"/report", GetReportHandler),
+    (r"/healthcheck", HealthCheckHandler),
+], static_path=root_path, template_path=root_path)
 
-def main(arguments, *args, **kwargs):
-    tornado_port = arguments
-    if isinstance(arguments, dict):
-        tornado_port = arguments.get('SERVER_PORT')
+redis_host = settings.REDIS_HOST
+redis_port = int(settings.REDIS_PORT)
 
-    AsyncHTTPClient.configure("tornado.curl_httpclient.CurlAsyncHTTPClient")
-    io_loop = tornado.ioloop.IOLoop.instance()
+application.redis = Client(io_loop=io_loop)
+application.redis.authenticated = True
+application.redis.connect(redis_host, redis_port, callback=has_connected(application, io_loop))
+application.redis.auth(settings.REDIS_PASSWORD)
 
-    root_path = os.path.abspath(os.path.join(os.path.dirname(__file__)))
-    config = dict(
-        static_path=root_path,
-        template_path=root_path
-    )
-
-    application = tornado.web.Application([
-        (r"/", MainHandler),
-        (r"/report", GetReportHandler),
-        (r"/healthcheck", HealthCheckHandler),
-    ], **config)
-
-    redis_host = settings.REDIS_HOST
-    redis_port = int(settings.REDIS_PORT)
-
-    application.redis = Client(io_loop=io_loop)
-    application.redis.authenticated = True
-    application.redis.connect(redis_host, redis_port, callback=has_connected(application, io_loop))
-    application.redis.auth(settings.REDIS_PASSWORD)
-
-    application.listen(tornado_port, address='0.0.0.0')
-    io_loop.start()
 
 if __name__ == "__main__":
     if len(sys.argv) > 2:
-        port = int(sys.argv[2])
+        server_port = int(sys.argv[2])
     else:
-        port = int(sys.argv[1])
+        server_port = int(sys.argv[1])
 
-    main(port)
+    application.listen(server_port, address='0.0.0.0')
+    io_loop.start()
