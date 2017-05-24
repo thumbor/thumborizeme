@@ -8,6 +8,6 @@ REDIS_PASSWORD = os.environ.get('REDIS_PASSWORD', '')
 HOST = os.environ.get('HOST', 'http://localhost:9000')
 THUMBOR_HOST = os.environ.get('THUMBOR_HOST', 'http://localhost:8001')
 
-#PROXY
+# PROXY
 PROXY_HOST = os.environ.get('PROXY_HOST', '')
-PROXY_PORT = os.environ.get('PROXY_HOST')
+PROXY_PORT = os.environ.get('PROXY_PORT')

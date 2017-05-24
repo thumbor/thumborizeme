@@ -67,13 +67,10 @@ class GetReportHandler(tornado.web.RequestHandler):
             return
 
         response = yield self.get_content(site_url)
-
         html = lxml.html.fromstring(response.body)
-
         imgs = html.cssselect('img[src]')
 
         images = {}
-
         for img in imgs:
             url = img.get('src').lstrip('//')
 
@@ -136,7 +133,7 @@ class GetReportHandler(tornado.web.RequestHandler):
             connect_timeout=1,
             request_timeout=3,
             proxy_host=settings.PROXY_HOST,
-            proxy_port=settings.PROXY_PORT
+            proxy_port=int(settings.PROXY_PORT)
         )
 
         http_client = AsyncHTTPClient()
