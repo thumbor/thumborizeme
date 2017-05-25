@@ -122,7 +122,7 @@
 
   var url = getParameterByName('url');
 
-  if (url != null) {
+  if (url != "") {
     updateUrl(url);
   }
 })();
