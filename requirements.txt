@@ -6,3 +6,4 @@ requests
 pycurl==7.43.0
 gunicorn==19.7.1
 thumbor==6.3.2
+numpy==1.11.1
