@@ -23,7 +23,6 @@ io_loop = tornado.ioloop.IOLoop.instance()
 
 class HealthCheckHandler(tornado.web.RequestHandler):
     @tornado.gen.coroutine
-    @tornado.web.asynchronous
     def get(self):
         try:
             yield tornado.gen.Task(self.application.redis.ping)
@@ -36,7 +35,6 @@ class HealthCheckHandler(tornado.web.RequestHandler):
 
 class MainHandler(tornado.web.RequestHandler):
     @tornado.gen.coroutine
-    @tornado.web.asynchronous
     def get(self):
         url = self.get_argument('url', None)
 
@@ -55,7 +53,6 @@ class MainHandler(tornado.web.RequestHandler):
 
 class GetReportHandler(tornado.web.RequestHandler):
     @tornado.gen.coroutine
-    @tornado.web.asynchronous
     def get(self):
         site_url = self.get_argument('url')
 
