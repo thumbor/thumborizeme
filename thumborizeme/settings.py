@@ -10,5 +10,5 @@ THUMBOR_HOST = os.environ.get('THUMBOR_HOST', 'http://localhost:8001')
 
 # PROXY
 PROXY_HOST = os.environ.get('PROXY_HOST', '')
-PROXY_HOST_HTTPS = os.environ.get('PROXY_HOST', '')
+PROXY_HOST_HTTPS = os.environ.get('PROXY_HOST_HTTPS', '')
 PROXY_PORT = os.environ.get('PROXY_PORT', 0)
