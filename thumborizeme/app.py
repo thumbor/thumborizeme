@@ -129,8 +129,8 @@ class GetReportHandler(tornado.web.RequestHandler):
             url=url,
             connect_timeout=1,
             request_timeout=3,
-            proxy_host=settings.PROXY_HOST,
-            proxy_port=int(settings.PROXY_PORT)
+            proxy_host=settings.PROXY_HOST_HTTPS if 'https' in url else settings.PROXY_HOST,
+            proxy_port=settings.PROXY_PORT
         )
 
         http_client = AsyncHTTPClient()
