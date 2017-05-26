@@ -36,3 +36,11 @@
 .social .fb-like {
     bottom: 5px;
 }
+
+#submit {
+    vertical-align: top;
+}
+
+#website {
+    vertical-align: top;
+}
