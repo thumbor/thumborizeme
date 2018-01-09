@@ -125,11 +125,11 @@ class GetReportHandler(tornado.web.RequestHandler):
 
     @return_future
     def get_content(self, url, callback):
-        proxy_host = settings.PROXY_HOST_HTTPS if 'https' in url else settings.PROXY_HOST,
+        proxy_host = settings.PROXY_HOST_HTTPS if url.startswith('https') else settings.PROXY_HOST
         req = HTTPRequest(
             url=url,
-            connect_timeout=1,
-            request_timeout=3,
+            connect_timeout=3,
+            request_timeout=10,
             proxy_host=proxy_host,
             proxy_port=int(settings.PROXY_PORT)
         )
@@ -146,6 +146,7 @@ def has_connected(application, io_loop):
         pass
 
     return handle
+
 
 application = tornado.web.Application([
     (r"/", MainHandler),
