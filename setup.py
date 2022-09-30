@@ -3,7 +3,7 @@
 
 from setuptools import setup, find_packages
 
-__version__ = "0.0.1+globo.2"
+__version__ = "0.0.1"
 
 RUNTIME_REQUIREMENTS = [
     "black==22.*,>=22.1.0",
