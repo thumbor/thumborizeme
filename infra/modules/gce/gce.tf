@@ -30,8 +30,9 @@ resource "google_compute_instance" "thumborizeme" {
   apt update -y
   apt install -y ansible
   mkdir -p /opt/ansible
-  curl https://https://raw.githubusercontent.com/thumbor/thumborizeme/thumborizeme-gcp/playbook.yml -o /opt/ansible/playbook.yml
-  ansible-playbook /opt/ansible/playbook.yml -t utils,web,redis
+  curl https://raw.githubusercontent.com/thumbor/thumborizeme/thumborizeme-gcp/playbook.yml -o /opt/ansible/playbook.yml
+  ansible-playbook /opt/ansible/playbook.yml -t utils
+  ansible-playbook /opt/ansible/playbook.yml
   EOT
 
   #service_account {

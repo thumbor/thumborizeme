@@ -8,6 +8,21 @@
         name: git
         state: latest
       tags: ["utils"]
+    - name: "Install Python"
+      apt:
+        name: python3
+        state: latest
+      tags: ["utils"]
+    - name: "Install Python PIP"
+      apt:
+        name: python3-pip
+        state: latest
+      tags: ["utils"]
+    - name: "Install make"
+      apt:
+        name: make
+        state: latest
+      tags: ["utils"]
     - name: "Install libcurl"
       apt:
         name: libcurl4-openssl-dev
@@ -32,12 +47,12 @@
       apt:
         name: nginx
         state: latest
-      tags: ["web-install"]
+      tags: ["utils"]
     - name: "Install redis"
       apt:
         name: redis-server
         state: latest
-      tags: ["redis"]
+      tags: ["utils"]
     - name: Create dir logs and permissions
       ansible.builtin.file:
          path: /var/logs/
@@ -62,38 +77,45 @@
          state: directory
          mode: '0756'
       tags: ["dir"]
-    - name: Avoid hanging when http(s) password is missing
+    - name: Download Git Thumbor
       ansible.builtin.git:
          repo: https://github.com/thumbor/thumborizeme.git
          dest: /tmp/current/
+         force: yes
          version: thumborizeme-gcp
-      tags: ["thumbor-clone"]
+      tags: ["thumbor"]
     - name: Run make 'setup'
       make:
         chdir: /tmp/current
         target: setup
+      tags: ["thumbor"]
     - name: Copy supervisord.conf and permissions
       ansible.builtin.copy:
         src: /tmp/current/supervisor.conf
         dest: /etc/supervisor/supervisord.conf
         mode: '0756'
+      tags: ["thumbor"]
     - name: Copy thumbor.conf and permissions
       ansible.builtin.copy:
         src: /tmp/current/thumbor.conf
         dest: /etc/thumbor.conf
         mode: '0756'
+      tags: ["thumbor"]
     - name: Copy nginx.conf and permissions
       ansible.builtin.copy:
         src: /tmp/current/nginx.conf
         dest: /etc/nginx/sites-available/default
         mode: '0756'
-    - name: "Start nginx"
-      systemd:
+      tags: ["thumbor"]
+    - name: "Restart nginx"
+      ansible.builtin.systemd:
         name: nginx
-        state: started
+        state: restarted
         enabled: yes
-      tags: ["web-start"]
+      tags: ["restarted"]
     - name: "Restart supervisor"
       ansible.builtin.systemd:
         state: restarted
         name: supervisor
+        enabled: yes
+      tags: ["restarted"]
