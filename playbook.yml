@@ -1,0 +1,52 @@
+- name: "Configure host"
+  hosts: 127.0.0.1
+  connection: local
+  become: yes
+  tasks:
+    - name: "Install git"
+      apt:
+        name: git
+        state: latest
+      tags: ["utils"]
+    - name: "Install libcurl"
+      apt:
+        name: libcurl4-openssl-dev
+        state: latest
+      tags: ["utils"]
+    - name: "Install libssl"
+      apt:
+        name: libssl-dev
+        state: latest
+      tags: ["utils"]
+    - name: "Install python3-virtualenv"
+      apt:
+        name: python3-virtualenv
+        state: latest
+      tags: ["utils"]
+    - name: "Install virtualenv"
+      apt:
+        name: virtualenv
+        state: latest
+      tags: ["utils"]
+    - name: "Install gifsicle"
+      apt:
+        name: gifsicle
+        state: latest
+      tags: ["utils"]
+    - name: "Install nginx"
+      apt:
+        name: nginx
+        state: latest
+      tags: ["web"]
+    - name: "Start nginx"
+      systemd:
+        name: nginx
+        state: started
+        enabled: yes
+      tags: ["web"]
+    - name: "Install redis"
+      apt:
+        name: redis-server
+        state: latest
+      tags: ["redis"]
+

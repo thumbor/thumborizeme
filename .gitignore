@@ -34,3 +34,10 @@ nosetests.xml
 .project
 .pydevproject
 .ropeproject/
+
+*.swp
+
+**/.terraform
+**/.env.tfvars
+**/*.tfstate*
+**/.terraform.lock.hcl
