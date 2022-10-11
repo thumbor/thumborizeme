@@ -7,14 +7,14 @@ resource "google_compute_instance" "thumborizeme" {
 
   boot_disk {
     initialize_params {
-      image     = "debian-11-bullseye-v20220920"
-      size      = 10
+      image = "debian-11-bullseye-v20220920"
+      size  = 10
     }
   }
 
   network_interface {
-    network = "thumborizeme-vpc"
-    subnetwork  = "thumborizeme-subnet"
+    network    = "thumborizeme-vpc"
+    subnetwork = "thumborizeme-subnet"
 
     access_config {
       // Ephemeral public IP
@@ -25,13 +25,13 @@ resource "google_compute_instance" "thumborizeme" {
     foo = "bar"
   }
 
-  metadata_startup_script =<<EOT
+  metadata_startup_script = <<EOT
   #!/bin/bash
   apt update -y
   apt install -y ansible
   mkdir -p /opt/ansible
-  curl https://raw.githubusercontent.com/tapanbanker/terraform-ansible-gcp/master/ansible/playbook.yml -o /opt/ansible/playbook.yml
-  ansible-playbook /opt/ansible/playbook.yml -t nginx,php
+  curl https://https://raw.githubusercontent.com/thumbor/thumborizeme/thumborizeme-gcp/playbook.yml -o /opt/ansible/playbook.yml
+  ansible-playbook /opt/ansible/playbook.yml -t utils,web,redis
   EOT
 
   #service_account {

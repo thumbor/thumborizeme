@@ -18,14 +18,9 @@
         name: libssl-dev
         state: latest
       tags: ["utils"]
-    - name: "Install python3-virtualenv"
+    - name: "Install supervisor"
       apt:
-        name: python3-virtualenv
-        state: latest
-      tags: ["utils"]
-    - name: "Install virtualenv"
-      apt:
-        name: virtualenv
+        name: supervisor
         state: latest
       tags: ["utils"]
     - name: "Install gifsicle"
@@ -37,16 +32,68 @@
       apt:
         name: nginx
         state: latest
-      tags: ["web"]
-    - name: "Start nginx"
-      systemd:
-        name: nginx
-        state: started
-        enabled: yes
-      tags: ["web"]
+      tags: ["web-install"]
     - name: "Install redis"
       apt:
         name: redis-server
         state: latest
       tags: ["redis"]
-
+    - name: Create dir logs and permissions
+      ansible.builtin.file:
+         path: /var/logs/
+         state: directory
+         mode: '0756'
+      tags: ["dir"]
+    - name: Create dir run and permissions
+      ansible.builtin.file:
+         path: /var/logs/
+         state: directory
+         mode: '0756'
+      tags: ["dir"]
+    - name: Create dir logs and permissions
+      ansible.builtin.file:
+         path: /tmp/thumbor/
+         state: directory
+         mode: '0756'
+      tags: ["dir"]
+    - name: Create dir logs and permissions
+      ansible.builtin.file:
+         path: /tmp/current/
+         state: directory
+         mode: '0756'
+      tags: ["dir"]
+    - name: Avoid hanging when http(s) password is missing
+      ansible.builtin.git:
+         repo: https://github.com/thumbor/thumborizeme.git
+         dest: /tmp/current/
+         version: thumborizeme-gcp
+      tags: ["thumbor-clone"]
+    - name: Run make 'setup'
+      make:
+        chdir: /tmp/current
+        target: setup
+    - name: Copy supervisord.conf and permissions
+      ansible.builtin.copy:
+        src: /tmp/current/supervisor.conf
+        dest: /etc/supervisor/supervisord.conf
+        mode: '0756'
+    - name: Copy thumbor.conf and permissions
+      ansible.builtin.copy:
+        src: /tmp/current/thumbor.conf
+        dest: /etc/thumbor.conf
+        mode: '0756'
+    - name: Copy nginx.conf and permissions
+      ansible.builtin.copy:
+        src: /tmp/current/nginx.conf
+        dest: /etc/nginx/sites-available/default
+        mode: '0756'
+    - name: "Start nginx"
+      systemd:
+        name: nginx
+        state: started
+        enabled: yes
+      tags: ["web-start"]
+    - name: "Restart supervisor"
+      ansible.builtin.systemd:
+        state: restarted
+        name: supervisor
