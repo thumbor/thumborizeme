@@ -53,6 +53,11 @@
         name: redis-server
         state: latest
       tags: ["utils"]
+    - name: "Install libgl1"
+      apt:
+        name: libgl1
+        state: latest
+      tags: ["utils"]
     - name: Create dir logs and permissions
       ansible.builtin.file:
          path: /var/logs/
