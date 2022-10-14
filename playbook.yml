@@ -2,9 +2,6 @@
   hosts: 127.0.0.1
   connection: local
   become: yes
-  environment:
-    HOST: "http://thumborize.me"
-    THUMBOR_HOST: "http://thumbor.thumborize.me"
   tasks:
     - name: "Install git"
       apt:
@@ -90,7 +87,7 @@
          repo: https://github.com/thumbor/thumborizeme.git
          dest: /tmp/current/
          force: yes
-         version: thumborizeme-gcp
+         version: master
       tags: ["thumbor"]
     - name: Run make 'setup'
       make:

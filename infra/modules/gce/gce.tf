@@ -21,23 +21,13 @@ resource "google_compute_instance" "thumborizeme" {
     }
   }
 
-  metadata = {
-    foo = "bar"
-  }
-
   metadata_startup_script = <<EOT
   #!/bin/bash
   apt update -y
   apt install -y ansible
   mkdir -p /opt/ansible
-  curl https://raw.githubusercontent.com/thumbor/thumborizeme/thumborizeme-gcp/playbook.yml -o /opt/ansible/playbook.yml
+  curl https://raw.githubusercontent.com/thumbor/thumborizeme/master/playbook.yml -o /opt/ansible/playbook.yml
   ansible-playbook /opt/ansible/playbook.yml -t utils
   ansible-playbook /opt/ansible/playbook.yml
   EOT
-
-  #service_account {
-  #  # Google recommends custom service accounts that have cloud-platform scope and permissions granted via IAM Roles.
-  #  email  = var.sa_email
-  #  scopes = ["cloud-platform"]
-  #}
 }
