@@ -18,6 +18,7 @@ RUNTIME_REQUIREMENTS = [
     "thumbor==7.1.0",
     "tornado==6.2",
     "pydantic",
+    "opencv-python",
     "pre-commit==2.*,>=2.17.0",
 ]
 

@@ -28,6 +28,13 @@ REDIS_SENTINEL_SOCKET_TIMEOUT = 1.0
 REDIS_MODE = "sentinel"
 ```
 
+## Update Thumborize
+
+```sh
+ansible-playbook /opt/ansible/playbook.yml -t thumbor
+ansible-playbook /opt/ansible/playbook.yml -t restart
+```
+
 ## Dependencies
 
 To install the dependencies, run the commands bellow:
