@@ -25,6 +25,7 @@ resource "google_compute_instance" "thumborizeme" {
       // work unless Terraform can send traffic to the instance's network
       // (e.g. via tunnel or because it is running on another cloud instance on
       // that network).
+      nat_ip = "35.226.126.55"
     }
   }
 
