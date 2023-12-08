@@ -79,7 +79,7 @@
 
                 social.html('');
 
-                social.append('<a href="https://twitter.com/share" class="twitter-share-button" data-url="http://thumborize.me?url=' + url + '" data-text="' + tweet + '" data-hashtags="thumbor">Tweet</a>');
+                social.append('<a href="https://twitter.com/share" class="twitter-share-button" data-url="http://thumborize.me?url=' + encodeURIComponent(url) + '" data-text="' + encodeURIComponent(tweet) + '" data-hashtags="thumbor">Tweet</a>');
 
                 social.append('<div ' +
                     'class="fb-like" ' +
